@@ -24,6 +24,9 @@ export let dataHandler = {
     },
     getBoards: function (callback) {
         // the boards are retrieved and then the callback function is called with the boards
+        if(this._data.hasOwnProperty('boards')){
+            callback(this._data.boards);
+        }
 
         // Here we use an arrow function to keep the value of 'this' on dataHandler.
         //    if we would use function(){...} here, the value of 'this' would change.
