@@ -61,6 +61,46 @@ export let dom = {
     },
     // here comes more features
     login: function () {
-        $('inputModal').modal({show:true})
-    }
+
+        let data = {
+            "url": "/login",
+            "message": "Wrong user name or password"
+        };
+
+        dom.getAjax(data);
+    },
+
+
+
+    getAjax: function(data) {
+    let form_values = {};
+    $('#inputModal').modal({show: true});
+    $('#inputForm').submit(function () {
+        let $inputs = $('#inputForm :input');
+        $inputs.each(function () {
+            form_values[this.name] = $(this).val();
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '/login',
+            dataType: 'json',
+            data: form_values
+        })
+            .then(
+
+                function success() {
+                    alert("Logged in");
+                    location.reload()
+                },
+                function fail() {
+                    alert(data["message"]);
+                     location.reload();
+                }
+            );
+
+
+    });
+}
+
 };

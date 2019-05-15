@@ -24,7 +24,7 @@ def _read_csv(file_name):
 def _get_data(data_type, file, force):
     """
     Reads defined type of data from file or cache
-    :param data_type: key where the data is stored in cache
+    :param data_type: key where the data is stored in cachexxxx
     :param file: relative path to data file
     :param force: if set to True, cache will be ignored
     :return: OrderedDict
