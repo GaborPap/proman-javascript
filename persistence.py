@@ -1,10 +1,21 @@
 import csv
 
 STATUSES_FILE = './data/statuses.csv'
+STATUSES_HEADER = ['id', 'title']
 BOARDS_FILE = './data/boards.csv'
+BOARDS_HEADER = ['id', 'title']
 CARDS_FILE = './data/cards.csv'
+CARDS_HEADER = ['id', 'board_id', 'title', 'status_id', 'order']
+
 
 _cache = {}  # We store cached data in this dict to avoid multiple file readings
+
+
+def _write_csv(file_name, data, header):
+    with open(file_name, 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=header, delimiter=',', quotechar='"')
+        writer.writeheader()
+        writer.writerows(data)
 
 
 def _read_csv(file_name):
@@ -49,3 +60,15 @@ def get_boards(force=False):
 
 def get_cards(force=False):
     return _get_data('cards', CARDS_FILE, force)
+
+
+def write_statuses(data):
+    return _write_csv(STATUSES_FILE, data, STATUSES_HEADER)
+
+
+def write_boards(data):
+    return _write_csv(BOARDS_FILE, data, BOARDS_HEADER)
+
+
+def write_cards(data):
+    return _write_csv(CARDS_FILE, data, CARDS_HEADER)
