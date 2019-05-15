@@ -38,13 +38,10 @@ export let dom = {
             let clone = document.importNode(template.content, true);
             let section = document.createElement('section');
             section.classList.add('board');
-            console.log(clone.querySelector('.board-title'));
             clone.querySelector('.board-title').innerHTML = board.title;
             section.appendChild(clone);
             boardContainer.appendChild(section);
         }
-        console.log(boardContainer);
-
         //this._appendToElement(document.querySelector('#boards'), outerHtml);
     },
     loadCards: function (boardId) {
