@@ -19,6 +19,7 @@ export let dom = {
     },
     init: function () {
         // This function should run once, when the page is loaded.
+        document.getElementById('login_button').addEventListener('click', dom.login)
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
@@ -59,4 +60,7 @@ export let dom = {
         // it adds necessary event listeners also
     },
     // here comes more features
+    login: function () {
+        $('inputModal').modal({show:true})
+    }
 };
