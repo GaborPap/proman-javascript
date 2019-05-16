@@ -45,6 +45,7 @@ export let dom = {
             let section = document.createElement(`section`);
             section.id = `board${board.id}`;
             section.classList.add(`board`);
+            clone.querySelector('.board-toggle').setAttribute('target', board.id);
             clone.querySelector('.board-title').innerHTML = board.title;
             section.appendChild(clone);
             boardContainer.appendChild(section);
@@ -63,6 +64,7 @@ export let dom = {
         const board = document.querySelector(`#board${boardId}`);
         let template_column= document.querySelector('#board_columns');
         let clone_columns = document.importNode(template_column.content, true);
+        clone_columns.querySelector('.board-columns').id = `box${boardId}`;
         for (let card of cards){
             let card_template = document.querySelector('#card_sample');
             let clone_card = document.importNode(card_template.content,true);
@@ -73,6 +75,13 @@ export let dom = {
             column.querySelector('.board-column-content').appendChild(clone_card);
         }
         board.appendChild(clone_columns);
+    },
+    slide: function () {
+        $(document).ready(function() {
+          $('.board-toggle').click(function() {
+            $('#box'+$(this).attr('target')).slideToggle(400);
+          });
+        });
     },
     // here comes more features
 
