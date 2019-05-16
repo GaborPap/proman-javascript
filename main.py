@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request
-#from util import json_response
+# from util import json_response
 import util
 import json
 
@@ -8,7 +8,7 @@ import data_handler
 app = Flask(__name__)
 
 
-@app.route("/", methods=["GET","POST"])
+@app.route("/", methods=["GET", "POST"])
 def index():
     """
     This is a one-pager which shows all the boards and cards
@@ -34,18 +34,33 @@ def get_cards_for_board(board_id: int):
     """
     return data_handler.get_cards_for_board(board_id)
 
-@app.route('/login', methods=["GET","POST"])
+
+@app.route('/login', methods=["GET", "POST"])
 def login():
+    users = data_handler.get_users()
+    user_data = util.get_user_data_from_form(request.form)
 
-    user = request.form.get('user-name')
-
-    password = request.form.get('password')
-    pass_tmp = util.hash_password("alma")
-
-    if util.verify_password(password,pass_tmp):
-     #   print("+slkdjflskdjfskldjfs")
+    if util.check_user_login(user_data, users):
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
+
+
+@app.route('/register', methods=["POST"])
+def register():
+    user_data = util.get_user_data_from_form(request.form)
+    users = data_handler.get_users()
+    if not util.check_user_exists(user_data["username"], users):
+        user_data["password"] = util.hash_password(user_data["password"])
+        user_data["id"] = util.get_max_id(data_handler.get_users()) + 1
+        if users:
+            users.append(user_data)
+        else:
+            users = [user_data]
+        print(users)
+        data_handler.write_users(users)
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
+
 
 def main():
     app.run(debug=True)
