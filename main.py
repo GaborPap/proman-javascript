@@ -36,6 +36,7 @@ def get_cards_for_board(board_id: int):
 
 @app.route('/login', methods=["GET","POST"])
 def login():
+
     user = request.form.get('user-name')
 
     password = request.form.get('password')

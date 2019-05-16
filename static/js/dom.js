@@ -73,9 +73,10 @@ export let dom = {
 
 
     getAjax: function(data) {
+                event.preventDefault();
     let form_values = {};
     $('#inputModal').modal({show: true});
-    $('#inputForm').submit(function () {
+    $('#submit-button').click( function () {
         let $inputs = $('#inputForm :input');
         $inputs.each(function () {
             form_values[this.name] = $(this).val();
