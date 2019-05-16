@@ -64,6 +64,7 @@ export let dom = {
             let clone_card = document.importNode(card_template.content,true);
             clone_card.querySelector('.card-title').innerHTML = card.title;
             clone_card.querySelector('.card').setAttribute('data-order', card.order);
+            clone_card.querySelector('.card').setAttribute('data-cardId', card.id);
             let column = clone_columns.querySelector(`.${card.status_id}`);
             column.querySelector('.board-column-content').appendChild(clone_card);
         }
