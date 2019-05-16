@@ -11,10 +11,28 @@
 </template>
 
 {# Board coulumn template  parent: div class="board-columns"    #}
-<template id="board_column">
-    <div class="board-column">
-        <div class="board-column-title"></div>
-        <div class="board-column-content">
+<template id="board_columns">
+    <div class="board-columns">
+        <div class="board-column">
+            <div class="board-column-title new">New</div>
+            <div class="board-column-content">
+            </div>
+        </div>
+        <div class="board-column in_progress">
+            <div class="board-column-title">In
+            Progress</div>
+            <div class="board-column-content">
+            </div>
+        </div>
+        <div class="board-column testing">
+            <div class="board-column-title">Testing</div>
+            <div class="board-column-content">
+            </div>
+        </div>
+        <div class="board-column done">
+            <div class="board-column-title">Done</div>
+            <div class="board-column-content">
+            </div>
         </div>
     </div>
 </template>
