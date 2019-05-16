@@ -40,7 +40,7 @@ export let dom = {
         let userid = dom.getUserIdFromSession();
 
         for (let board of boards) {
-            if (board['userid'] === '0' || board['userid'] === userid) {
+            if ((board['userid'] === '0' && !board['userid']) || board['userid'] === userid) {
                 let template = document.querySelector('#board_header');
                 let clone = document.importNode(template.content, true);
                 let section = document.createElement(`section`);
