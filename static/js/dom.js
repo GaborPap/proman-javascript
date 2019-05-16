@@ -49,26 +49,29 @@ export let dom = {
     },
 
     loadCards: function (boardId) {
-        dataHandler.getCardsByBoardId(boardId, function () {
-            dom.showCards()
+        dataHandler.getCardsByBoardId(boardId, function (cards) {
+            dom.showCards(boardId,cards)
         })
 
             // dom.showCards(board_id);
             // })
     },
-    showCards: function (cards) {
+    showCards: function (boardId,cards) {
         // shows the cards of a board
         // it adds necessary event listeners also
-        console.log(cards)
-        const section = document.querySelector(`board${id}`);
-
+        // console.log(cards,boardId);
+        const board = document.querySelector(`#board${boardId}`);
+        let template_column= document.querySelector('#board_columns');
+        let clone_columns = document.importNode(template_column.content, true);
         for (let card of cards){
-            let template_column= document.querySelector('#board_columns');
-            let clone_template = document.importNode(template_column.content, true);
-            clone_template.querySelector('.board-column-title').innerHTML = card.title;
-            section.appendChild(clone_template)
-        }
+            let card_template = document.querySelector('#card_sample');
+            let clone_card = document.importNode(card_template.content,true);
+            clone_card.querySelector('.card-title').textContent = card.title;
+            let column = clone_columns.querySelector(`.${card.status_id}`);
 
+            column.querySelector('.board-column-content').appendChild(clone_card);
+        }
+        board.appendChild(clone_columns);
     },
     // here comes more features
 };
