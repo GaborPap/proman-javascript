@@ -28,3 +28,11 @@ def get_cards_for_board(board_id):
             card['status_id'] = get_card_status(card['status_id'])  # Set textual status for the card
             matching_cards.append(card)
     return matching_cards
+
+
+def get_users():
+    return persistence.get_users(force=True)
+
+
+def write_users(user_data):
+    return persistence.write_users(user_data)
