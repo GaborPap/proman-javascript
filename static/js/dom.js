@@ -91,7 +91,7 @@ export let dom = {
 
         let data = {
             "title": "Login",
-            "button_text":"Login",
+            "button_text": "Login",
             "url": "/login",
             "message_success": "Logged in ",
             "message_fail": "Wrong user name or password"
@@ -104,8 +104,8 @@ export let dom = {
     register: function () {
 
         let data = {
-                        "title": "Register new user",
-            "button_text":"Register",
+            "title": "Register new user",
+            "button_text": "Register",
             "url": "/register",
             "message_success": "Register succesfull",
             "message_fail": "Register failed"
@@ -121,7 +121,6 @@ export let dom = {
 
         $('#inputLabel').text(data["title"]);
         $('#submit-button').text(data["button_text"]);
-
 
 
         $('#inputModal').modal({show: true});
