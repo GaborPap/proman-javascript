@@ -65,3 +65,5 @@ export let dataHandler = {
     }
     // here comes more features
 };
+
+sessionStorage.get
