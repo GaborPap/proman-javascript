@@ -51,7 +51,6 @@ export let dataHandler = {
         }
         this._api_get(`/get-cards/${boardId}`, (response) => {
             this._data = response;
-            // console.log(this._data = response);
             callback(response)
         });
     },
