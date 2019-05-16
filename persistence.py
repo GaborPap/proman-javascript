@@ -3,12 +3,11 @@ import csv
 STATUSES_FILE = './data/statuses.csv'
 STATUSES_HEADER = ['id', 'title']
 BOARDS_FILE = './data/boards.csv'
-BOARDS_HEADER = ['id', 'title']
+BOARDS_HEADER = ['id', 'title', 'userid']
 CARDS_FILE = './data/cards.csv'
 CARDS_HEADER = ['id', 'board_id', 'title', 'status_id', 'order']
 USERS_FILE = './data/users.csv'
 USERS_HEADER = ['id', 'username', 'password']
-
 
 _cache = {}  # We store cached data in this dict to avoid multiple file readings
 
@@ -63,8 +62,10 @@ def get_boards(force=False):
 def get_cards(force=False):
     return _get_data('cards', CARDS_FILE, force)
 
+
 def get_users(force=False):
     return _get_data('users', USERS_FILE, force)
+
 
 def write_statuses(data):
     return _write_csv(STATUSES_FILE, data, STATUSES_HEADER)
@@ -80,4 +81,3 @@ def write_cards(data):
 
 def write_users(data):
     return _write_csv(USERS_FILE, data, USERS_HEADER)
-

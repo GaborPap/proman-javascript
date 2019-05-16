@@ -57,3 +57,8 @@ def get_user_data_from_form(request):
 def get_max_id(data):
     print(len(data))
     return int(max(row["id"] for row in data)) if len(data) > 0 else 0
+
+def get_usr_id(username, users):
+    for user in users:
+        if user["username"] == username:
+            return user["id"]

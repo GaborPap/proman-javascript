@@ -34,40 +34,42 @@ export let dom = {
     showBoards: function (boards) {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
-
         const boardContainer = document.querySelector('.board-container');
         boardContainer.innerHTML = '';
 
-        for (let board of boards) {
+        let userid = dom.getUserIdFromSession();
 
-            let template = document.querySelector('#board_header');
-            let clone = document.importNode(template.content, true);
-            let section = document.createElement(`section`);
-            section.id = `board${board.id}`;
-            section.classList.add(`board`);
-            clone.querySelector('.board-toggle').setAttribute('target', board.id);
-            clone.querySelector('.board-title').innerHTML = board.title;
-            section.appendChild(clone);
-            boardContainer.appendChild(section);
-            dom.loadCards(board.id);
+        for (let board of boards) {
+            if (board['userid'] === '0' || board['userid'] === userid) {
+                let template = document.querySelector('#board_header');
+                let clone = document.importNode(template.content, true);
+                let section = document.createElement(`section`);
+                section.id = `board${board.id}`;
+                section.classList.add(`board`);
+                clone.querySelector('.board-toggle').setAttribute('target', board.id);
+                clone.querySelector('.board-title').innerHTML = board.title;
+                section.appendChild(clone);
+                boardContainer.appendChild(section);
+                dom.loadCards(board.id);
+            }
         }
     },
 
     loadCards: function (boardId) {
         dataHandler.getCardsByBoardId(boardId, function (cards) {
-            dom.showCards(boardId,cards)
+            dom.showCards(boardId, cards)
         })
     },
-    showCards: function (boardId,cards) {
+    showCards: function (boardId, cards) {
         // shows the cards of a board
         // it adds necessary event listeners also
         const board = document.querySelector(`#board${boardId}`);
-        let template_column= document.querySelector('#board_columns');
+        let template_column = document.querySelector('#board_columns');
         let clone_columns = document.importNode(template_column.content, true);
         clone_columns.querySelector('.board-columns').id = `box${boardId}`;
-        for (let card of cards){
+        for (let card of cards) {
             let card_template = document.querySelector('#card_sample');
-            let clone_card = document.importNode(card_template.content,true);
+            let clone_card = document.importNode(card_template.content, true);
             clone_card.querySelector('.card-title').innerHTML = card.title;
             clone_card.querySelector('.card').setAttribute('data-order', card.order);
             clone_card.querySelector('.card').setAttribute('data-cardId', card.id);
@@ -77,10 +79,10 @@ export let dom = {
         board.appendChild(clone_columns);
     },
     slide: function () {
-        $(document).ready(function() {
-          $('.board-toggle').click(function() {
-            $('#box'+$(this).attr('target')).slideToggle(400);
-          });
+        $(document).ready(function () {
+            $('.board-toggle').click(function () {
+                $('#box' + $(this).attr('target')).slideToggle(400);
+            });
         });
     },
     // here comes more features
@@ -125,8 +127,10 @@ export let dom = {
                 data: form_values
             })
                 .then(
-                    function success() {
+                    function success(data) {
+
                         sessionStorage.setItem('username', form_values["user-name"]);
+                        sessionStorage.setItem('userid', data["userid"]);
                         dom.showLoggedIn(form_values["user-name"], true);
                         location.reload()
                     },
@@ -154,16 +158,20 @@ export let dom = {
         } else {
             navbar.style.display = 'none';
             register.style.display = 'block';
-                        login.style.display = 'block';
+            login.style.display = 'block';
             logout.style.display = 'none';
         }
     },
 
-    logout: function(){
+    logout: function () {
         if (sessionStorage.getItem("username"))
-            sessionStorage.removeItem("username")
+            sessionStorage.removeItem("username");
+        sessionStorage.removeItem("userid");
         location.reload();
-    }
+    },
 
+    getUserIdFromSession: function () {
+        return sessionStorage.getItem("userid") ? sessionStorage.getItem("userid") : '0'
+    }
 };
 
