@@ -41,7 +41,11 @@ def login():
     user_data = util.get_user_data_from_form(request.form)
 
     if util.check_user_login(user_data, users):
-        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+        userid = util.get_usr_id(user_data["username"], users)
+        dic = {"userid": userid,
+               "success": True}
+
+        return json.dumps(dic), 200, {'ContentType': 'application/json'}
     return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
@@ -58,7 +62,13 @@ def register():
             users = [user_data]
         print(users)
         data_handler.write_users(users)
-        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
+        userid = util.get_usr_id(user_data["username"], users)
+        dic = {"userid": userid,
+               "success": True}
+
+        return json.dumps(dic), 200, {'ContentType': 'application/json'}
+
     return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 

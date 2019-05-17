@@ -1,3 +1,9 @@
-id,title
-1,"Board 1"
-2,"Board 2"
+id,title,userid
+1,"Board public 1",0
+2,"Board user 1",1
+3,"Board user 2",2
+4,"Board user 2_2",2
+5,"Board public 2",0
+6,"Board user 3",3
+7,"Board user 2_3",2
+8,"Board public 3",0
