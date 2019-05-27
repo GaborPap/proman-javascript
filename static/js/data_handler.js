@@ -13,18 +13,27 @@ export let dataHandler = {
             method: 'GET',
             credentials: 'same-origin'
         })
-        .then(response => response.json())  // parse the response as JSON
-        .then(json_response => callback(json_response));  // Call the `callback` with the returned object
+            .then(response => response.json())  // parse the response as JSON
+            .then(json_response => callback(json_response));  // Call the `callback` with the returned object
     },
     _api_post: function (url, data, callback) {
         // it is not called from outside
         // sends the data to the API, and calls callback function
+
+        fetch(url, {
+            method: 'POST',
+            dataType: 'json',
+            credentials: 'same-origin',
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())  // parse the response as JSON
+            .then(json_response => callback(json_response));  // Call the `callback` with the returned
     },
     init: function () {
     },
     getBoards: function (callback) {
         // the boards are retrieved and then the callback function is called with the boards
-        if(this._data.hasOwnProperty('boards')){
+        if (this._data.hasOwnProperty('boards')) {
             callback(this._data.boards);
         }
 
@@ -62,8 +71,14 @@ export let dataHandler = {
     },
     createNewCard: function (cardTitle, boardId, statusId, callback) {
         // creates new card, saves it and calls the callback function with its data
-    }
+    },
     // here comes more features
+
+    handleUserAuthentication: function (url, data, callback) {
+        this._api_post(url, data, (response) => {
+            this._data = response;
+            callback(response);
+        });
+    }
 };
 
-sessionStorage.get
