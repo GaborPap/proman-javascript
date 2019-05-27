@@ -127,3 +127,8 @@ section.board{
 .card-title{
     padding-right: 16px;
 }
+
+#new_board {
+    max-width: 920px;
+    margin: 0 auto;
+}
