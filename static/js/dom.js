@@ -19,6 +19,7 @@ export let dom = {
     },
     init: function () {
         // This function should run once, when the page is loaded.
+        document.querySelector('#new_board button').addEventListener('click', dom.addNewBoard);
         document.getElementById('logout').addEventListener('click', dom.logout);
         document.getElementById('login').addEventListener('click', dom.login);
         document.getElementById('register').addEventListener('click', dom.register);
@@ -41,15 +42,8 @@ export let dom = {
 
         for (let board of boards) {
             if ((board['userid'] === '0' && !board['userid']) || board['userid'] === userid) {
-                let template = document.querySelector('#board_header');
-                let clone = document.importNode(template.content, true);
-                let section = document.createElement(`section`);
-                section.id = `board${board.id}`;
-                section.classList.add(`board`);
-                clone.querySelector('.board-toggle').setAttribute('target', board.id);
-                clone.querySelector('.board-title').innerHTML = board.title;
-                section.appendChild(clone);
-                boardContainer.appendChild(section);
+                let boardElement = dom.createBoard(board);
+                boardContainer.appendChild(boardElement);
                 dom.loadCards(board.id);
             }
         }
@@ -64,19 +58,14 @@ export let dom = {
         // shows the cards of a board
         // it adds necessary event listeners also
         const board = document.querySelector(`#board${boardId}`);
-        let template_column = document.querySelector('#board_columns');
-        let clone_columns = document.importNode(template_column.content, true);
-        clone_columns.querySelector('.board-columns').id = `box${boardId}`;
+        const columns = board.querySelector('.board-columns');
+
         for (let card of cards) {
-            let card_template = document.querySelector('#card_sample');
-            let clone_card = document.importNode(card_template.content, true);
-            clone_card.querySelector('.card-title').innerHTML = card.title;
-            clone_card.querySelector('.card').setAttribute('data-order', card.order);
-            clone_card.querySelector('.card').setAttribute('data-cardId', card.id);
-            let column = clone_columns.querySelector(`.${card.status_id}`);
-            column.querySelector('.board-column-content').appendChild(clone_card);
+            let cardElement = dom.createCard(card);
+            let column = columns.querySelector(`.${card.status_id}`);
+            column.querySelector('.board-column-content').appendChild(cardElement);
         }
-        board.appendChild(clone_columns);
+        board.appendChild(columns);
     },
     slide: function () {
         $(document).ready(function () {
@@ -183,6 +172,36 @@ export let dom = {
 
     getUserIdFromSession: function () {
         return sessionStorage.getItem("userid") ? sessionStorage.getItem("userid") : '0'
+    },
+    createBoard: function (board) {
+        let template = document.querySelector('#board_header');
+        let clone = document.importNode(template.content, true);
+        let section = document.createElement(`section`);
+        section.id = `board${board.id}`;
+        section.classList.add(`board`);
+        clone.querySelector('.board-toggle').setAttribute('target', board.id);
+        clone.querySelector('.board-title').innerHTML = board.title;
+        section.appendChild(clone);
+        section.appendChild(dom.getColumns(board.id));
+        return section;
+    },
+    getColumns: function (boardId) {
+        let template_column = document.querySelector('#board_columns');
+        let clone_columns = document.importNode(template_column.content, true);
+        clone_columns.querySelector('.board-columns').id = `box${boardId}`;
+        return clone_columns;
+    },
+    createCard: function (card) {
+        let card_template = document.querySelector('#card_sample');
+        let clone_card = document.importNode(card_template.content, true);
+        clone_card.querySelector('.card-title').innerHTML = card.title;
+        clone_card.querySelector('.card').setAttribute('data-order', card.order);
+        clone_card.querySelector('.card').setAttribute('data-cardId', card.id);
+        return clone_card;
+    },
+    addNewBoard: function () {
+        dataHandler.createNewBoard('New Board')
+
     }
 };
 
