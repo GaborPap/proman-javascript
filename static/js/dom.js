@@ -200,7 +200,15 @@ export let dom = {
         return clone_card;
     },
     addNewBoard: function () {
-        dataHandler.createNewBoard('New Board')
+        let newBoardData = {
+            boardTitle: 'New Board',
+            userId: dom.getUserIdFromSession(),
+        };
+        dataHandler.createNewBoard(newBoardData, function (response) {
+            let boarContainer = document.querySelector('.board-container');
+            let newBoard = dom.createBoard(response);
+            boarContainer.appendChild(newBoard);
+        })
 
     }
 };

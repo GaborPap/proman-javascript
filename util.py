@@ -1,6 +1,8 @@
 from functools import wraps
 from flask import jsonify
 import bcrypt
+import json
+import data_handler
 
 
 def json_response(func):
@@ -55,10 +57,22 @@ def get_user_data_from_form(request):
 
 
 def get_max_id(data):
-    print(len(data))
-    return int(max(row["id"] for row in data)) if len(data) > 0 else 0
+    return max(int(row["id"]) for row in data) if len(data) > 0 else 0
 
 def get_usr_id(username, users):
     for user in users:
         if user["username"] == username:
             return user["id"]
+
+
+def add_new_board(request):
+    boards = data_handler.get_boards()
+    new_board_data = json.loads(request.data)
+    new_board = {
+        'id': get_max_id(boards) + 1,
+        'title': new_board_data['boardTitle'],
+        'userid': new_board_data['userId'],
+    }
+    boards.append(new_board)
+    data_handler.write_boards(boards)
+    return new_board

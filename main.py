@@ -72,6 +72,12 @@ def register():
     return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
+@app.route('/add-new-board', methods=['GET', 'POST'])
+@util.json_response
+def add_new_board():
+    return util.add_new_board(request)
+
+
 def main():
     app.run(debug=True)
 

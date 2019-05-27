@@ -36,3 +36,7 @@ def get_users():
 
 def write_users(user_data):
     return persistence.write_users(user_data)
+
+
+def write_boards(boards):
+    return persistence.write_boards(boards)
