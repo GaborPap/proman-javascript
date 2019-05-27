@@ -136,10 +136,10 @@ export let dom = {
 
     showLoggedIn: function () {
         let username = sessionStorage.getItem("username");
-        let register = document.getElementById("register");
-        let login = document.getElementById("login");
-        let logout = document.getElementById("logout");
-        let navbar = document.getElementById("navbar-text");
+        let register = document.querySelector("#register");
+        let login = document.querySelector("#login");
+        let logout = document.querySelector("#logout");
+        let navbar = document.querySelector("#navbar-text");
         if (username) {
             navbar.style.display = 'block';
             navbar.innerText = `Signed in as ${username}`;
