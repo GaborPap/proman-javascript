@@ -107,7 +107,31 @@ def user_register(request):
     return {"success": False, "type": "Register"}
 
 
+def get_status_id_by_name(status):
+    statuses = data_handler.get_statuses()
+    return [item["id"] for item in statuses if item["title"] == status][0]
+
+
+def update_card(cards, data_from_request, status_id):
+    for index in range(len(cards)):
+        if cards[index]['id'] == data_from_request['cardid']:
+            print("valami")
+            cards[index]['status_id'] = status_id
+            cards[index]['board_id'] = data_from_request['boardid']
+            return cards
+
 def moveCard(request):
     data_from_request = json.loads(request.data)
-    print(data_from_request)
+    cards = data_handler.get_all_cards()
+    print(cards)
+    card_id = data_from_request["cardid"]
+    status_id = get_status_id_by_name(data_from_request["status"])
+    print(status_id)
+    update_card(cards, data_from_request, status_id)
+
+    data_handler.write_cards(cards)
+    print(cards)
+
     return {"success": True}
+
+
