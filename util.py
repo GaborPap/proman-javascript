@@ -48,12 +48,6 @@ def check_user_login(user_data, users):
     return True
 
 
-def get_user_data_from_request(request):
-    request_data = request.data
-    data_from_request = json.loads(request_data)
-    return data_from_request
-
-
 def get_max_id(data):
     return max(int(row["id"]) for row in data) if len(data) > 0 else 0
 
@@ -76,10 +70,10 @@ def add_new_board(request):
     data_handler.write_boards(boards)
     return new_board
 
-  
+
 def user_login(request):
     users = data_handler.get_users()
-    data_from_request = get_user_data_from_request(request)
+    data_from_request = json.loads(request.data)
     if check_user_login(data_from_request, users):
         userid = get_usr_id(data_from_request["user-name"], users)
         result = {"userid": userid,
@@ -91,7 +85,7 @@ def user_login(request):
 
 def user_register(request):
     users = data_handler.get_users()
-    data_from_request = get_user_data_from_request(request)
+    data_from_request = json.loads(request.data)
     if not check_user_exists(data_from_request["user-name"], users):
         user_data = {
             "username": data_from_request["user-name"],
