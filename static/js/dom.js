@@ -202,31 +202,37 @@ export let dom = {
         getStatus: function (str) {
             return str.substring(str.lastIndexOf(" ") + 1, str.length)
         },
+
+        getOrderList: function (childrenList) {
+            let list = {};
+            let index = 1;
+            for (let item of childrenList) {
+                list[item.dataset["cardid"]] = index;
+                index += 1;
+            }
+            return list;
+        },
+
         drag: function () {
 
             dragula([].slice.call(document.querySelectorAll(".board-column-content")))
-                .on('drag', function (el) {
-                    let ell = el;
-                    let boardid = dom.getNumFromString(el.closest('section').id);
-                    //  let status = el.closest('.board-column');
-                    let cardid = el.dataset.cardid;
-
-                })
                 .on('drop', function (el) {
 
-                    //let ell = el;
                     let boardid = dom.getNumFromString(el.closest('section').id);
                     let cardid = el.dataset.cardid;
-                    //  let status = el.closest('.board-column');
-
                     let status = dom.getStatus(el.closest('.board-column').className);
+                    let cardOrder = dom.getOrderList(el.closest('.board-column-content').children);
+
                     let data = {
                         'boardid': boardid,
                         'cardid': cardid,
-                        'status': status
-
+                        'status': status,
+                        'order': cardOrder
                     };
-                dataHandler.moveCard('/dragdrop', data);
+
+                    dataHandler.moveCard('/dragdrop', data, function () {
+
+                    })
                 })
         }
     }

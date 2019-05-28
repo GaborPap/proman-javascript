@@ -112,26 +112,28 @@ def get_status_id_by_name(status):
     return [item["id"] for item in statuses if item["title"] == status][0]
 
 
-def update_card(cards, data_from_request, status_id):
+def update_card_data(cards, data_from_request, status_id):
     for index in range(len(cards)):
         if cards[index]['id'] == data_from_request['cardid']:
-            print("valami")
             cards[index]['status_id'] = status_id
             cards[index]['board_id'] = data_from_request['boardid']
             return cards
 
+
+def set_new_card_order(cards, order_dict):
+
+    for index in range(len(cards)):
+        print(cards[index]["id"])
+        if cards[index]["id"] in order_dict:
+            cards[index]["order"] = order_dict[cards[index]["id"]]
+
+
 def moveCard(request):
     data_from_request = json.loads(request.data)
     cards = data_handler.get_all_cards()
-    print(cards)
-    card_id = data_from_request["cardid"]
+    set_new_card_order(cards, data_from_request["order"])
     status_id = get_status_id_by_name(data_from_request["status"])
-    print(status_id)
-    update_card(cards, data_from_request, status_id)
-
+    update_card_data(cards, data_from_request, status_id)
     data_handler.write_cards(cards)
-    print(cards)
 
     return {"success": True}
-
-
