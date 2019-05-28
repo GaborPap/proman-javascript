@@ -20,9 +20,9 @@ export let dom = {
     init: function () {
         // This function should run once, when the page is loaded.
         document.querySelector('#new_board button').addEventListener('click', dom.addNewBoard);
-        document.getElementById('logout').addEventListener('click', dom.logout);
-        document.getElementById('login').addEventListener('click', dom.login);
-        document.getElementById('register').addEventListener('click', dom.register);
+        document.querySelector('#logout').addEventListener('click', dom.logout);
+        document.querySelector('#login').addEventListener('click', dom.login);
+        document.querySelector('#register').addEventListener('click', dom.register);
         dom.showLoggedIn();
     },
     loadBoards: function () {
@@ -76,79 +76,59 @@ export let dom = {
     },
     // here comes more features
 
-    login: function () {
-
-        let data = {
-            "title": "Login",
-            "button_text": "Login",
-            "url": "/login",
-            "message_success": "Logged in ",
-            "message_fail": "Wrong user name or password"
-        };
-
-        dom.getAjax(data);
-    },
-
-
-    register: function () {
-
-        let data = {
-            "title": "Register new user",
-            "button_text": "Register",
-            "url": "/register",
-            "message_success": "Register succesfull",
-            "message_fail": "Register failed"
-        };
-
-        dom.getAjax(data);
-    },
-
-    getAjax: function (data) {
-        event.preventDefault();
+    openModal: function (title, button_text, callback) {
         let form_values = {};
 
-
-        $('#inputLabel').text(data["title"]);
-        $('#submit-button').text(data["button_text"]);
-
-
+        $('#inputLabel').text(title);
         $('#inputModal').modal({show: true});
-
+        $('#submit-button').text(button_text);
         $('#submit-button').click(function () {
             let $inputs = $('#inputForm :input');
             $inputs.each(function () {
                 form_values[this.name] = $(this).val();
             });
-
-            $.ajax({
-                type: 'POST',
-                url: data['url'],
-                dataType: 'json',
-                data: form_values
-            })
-                .then(
-                    function success(data) {
-
-                        sessionStorage.setItem('username', form_values["user-name"]);
-                        sessionStorage.setItem('userid', data["userid"]);
-                        dom.showLoggedIn(form_values["user-name"], true);
-                        location.reload()
-                    },
-                    function fail() {
-                        alert(data["message_fail"]);
-                        location.reload();
-                    }
-                );
+            callback(form_values)
+        })
 
 
+    },
+
+    setLoginData: function (results) {
+        if (results["success"] === true) {
+            sessionStorage.setItem('username', results["username"]);
+            sessionStorage.setItem('userid', results["userid"]);
+            dom.showLoggedIn(results["user-name"], true);
+            location.reload();
+        } else
+
+            alert(`${results["type"]} failed`);
+    },
+
+
+    login: function () {
+
+        dom.openModal('Login', 'Login', function (form_values) {
+            dataHandler.handleUserAuthentication('/login', form_values, function (results) {
+                dom.setLoginData(results);
+            });
         });
     },
+
+    register: function () {
+        dom.openModal('Register', 'Register', function (form_values) {
+            dataHandler.handleUserAuthentication('/register', form_values, function (results) {
+                dom.setLoginData(results);
+            });
+        });
+    },
+
+
     showLoggedIn: function () {
         let username = sessionStorage.getItem("username");
-        let register = document.getElementById("register");
-        let login = document.getElementById("login");
-        let logout = document.getElementById("logout");
-        let navbar = document.getElementById("navbar-text");
+        let register = document.querySelector("#register");
+        let login = document.querySelector("#login");
+        let logout = document.querySelector("#logout");
+        let navbar = document.querySelector("#navbar-text");
         if (username) {
             navbar.style.display = 'block';
             navbar.innerText = `Signed in as ${username}`;
@@ -161,14 +141,16 @@ export let dom = {
             login.style.display = 'block';
             logout.style.display = 'none';
         }
-    },
+    }
+    ,
 
     logout: function () {
         if (sessionStorage.getItem("username"))
             sessionStorage.removeItem("username");
         sessionStorage.removeItem("userid");
         location.reload();
-    },
+    }
+    ,
 
     getUserIdFromSession: function () {
         return sessionStorage.getItem("userid") ? sessionStorage.getItem("userid") : '0'
