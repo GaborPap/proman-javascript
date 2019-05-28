@@ -83,6 +83,10 @@ export let dataHandler = {
             this._data = response;
             callback(response);
         });
+    },
+
+    moveCard: function(url, data){
+        this._api_post(url, data);
     }
 };
 

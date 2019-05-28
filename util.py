@@ -105,3 +105,9 @@ def user_register(request):
 
         return dic
     return {"success": False, "type": "Register"}
+
+
+def moveCard(request):
+    data_from_request = json.loads(request.data)
+    print(data_from_request)
+    return {"success": True}
