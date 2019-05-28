@@ -105,3 +105,31 @@ def user_register(request):
 
         return dic
     return {"success": False, "type": "Register"}
+
+
+def remove_board_by_id(boards, board_id):
+    for board in boards:
+        if board['id'] == board_id:
+            boards.remove(board)
+            return boards
+
+
+def delete_cards_by_board_id(board_id):
+    cards = data_handler.get_cards()
+    for card in cards.copy():
+        if card['board_id'] == board_id:
+            cards.remove(card)
+    data_handler.write_cards(cards)
+
+
+def delete_board(request):
+    boards = data_handler.get_boards()
+    request_data = json.loads(request.data)
+    board_id = request_data['id']
+    delete_cards_by_board_id(board_id)
+    boards = remove_board_by_id(boards, board_id)
+    data_handler.write_boards(boards)
+    return request_data
+
+
+

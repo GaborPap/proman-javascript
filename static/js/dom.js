@@ -165,6 +165,7 @@ export let dom = {
         clone.querySelector('.board-title').innerHTML = board.title;
         section.appendChild(clone);
         section.appendChild(dom.getColumns(board.id));
+        dom.addEventToDeleteBtn(section, board.id);
         return section;
     },
     getColumns: function (boardId) {
@@ -191,6 +192,18 @@ export let dom = {
             let newBoard = dom.createBoard(response);
             boarContainer.appendChild(newBoard);
         })
+    },
+    addEventToDeleteBtn: function (board, boardId) {
+        let button = board.querySelector('.board-delete');
+        button.setAttribute('data-board-id', boardId);
+        button.addEventListener('click', dom.deleteBoard);
+    },
+    deleteBoard: function (event) {
+        let button = event.currentTarget;
+        let boardId = button.dataset.boardId;
+        dataHandler.deleteBoard(boardId, function (response) {
+            document.querySelector(`#board${response.id}`).remove();
+        });
 
     }
 };
