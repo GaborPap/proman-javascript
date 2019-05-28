@@ -55,7 +55,7 @@ def get_user_data_from_request(request):
 
 
 def get_max_id(data):
-    return int(max(row["id"] for row in data)) if len(data) > 0 else 0
+    return max(int(row["id"]) for row in data) if len(data) > 0 else 0
 
 
 def get_usr_id(username, users):
@@ -64,6 +64,19 @@ def get_usr_id(username, users):
             return user["id"]
 
 
+def add_new_board(request):
+    boards = data_handler.get_boards()
+    new_board_data = json.loads(request.data)
+    new_board = {
+        'id': get_max_id(boards) + 1,
+        'title': new_board_data['boardTitle'],
+        'userid': new_board_data['userId'],
+    }
+    boards.append(new_board)
+    data_handler.write_boards(boards)
+    return new_board
+
+  
 def user_login(request):
     users = data_handler.get_users()
     data_from_request = get_user_data_from_request(request)

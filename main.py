@@ -46,6 +46,12 @@ def register():
     return util.user_register(request)
 
 
+@app.route('/add-new-board', methods=['GET', 'POST'])
+@util.json_response
+def add_new_board():
+    return util.add_new_board(request)
+
+
 def main():
     app.run(debug=True)
 
