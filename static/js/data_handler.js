@@ -83,6 +83,15 @@ export let dataHandler = {
             this._data = response;
             callback(response);
         });
+    },
+    deleteBoard: function (boardId, callback) {
+        let board = {
+            id: boardId
+        };
+        this._api_post('/delete-board', board, (response) => {
+            this._data = response;
+            callback(response);
+        })
     }
 };
 

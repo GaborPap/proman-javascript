@@ -40,3 +40,11 @@ def write_users(user_data):
 
 def write_boards(boards):
     return persistence.write_boards(boards)
+
+
+def get_cards():
+    return persistence.get_cards(force=True)
+
+
+def write_cards(cards):
+    return persistence.write_cards(cards)
