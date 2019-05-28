@@ -191,6 +191,7 @@ export let dom = {
                 let boarContainer = document.querySelector('.board-container');
                 let newBoard = dom.createBoard(response);
                 boarContainer.appendChild(newBoard);
+                dom.drag();
             })
 
         },
@@ -204,13 +205,13 @@ export let dom = {
         },
 
         getOrderList: function (childrenList) {
-            let list = {};
-            let index = 1;
+            let orderList = {};
+            let index = 0;
             for (let item of childrenList) {
-                list[item.dataset["cardid"]] = index;
+                orderList[item.dataset["cardid"]] = index;
                 index += 1;
             }
-            return list;
+            return orderList;
         },
 
         drag: function () {

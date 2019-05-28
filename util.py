@@ -123,12 +123,12 @@ def update_card_data(cards, data_from_request, status_id):
 def set_new_card_order(cards, order_dict):
 
     for index in range(len(cards)):
-        print(cards[index]["id"])
         if cards[index]["id"] in order_dict:
             cards[index]["order"] = order_dict[cards[index]["id"]]
 
 
-def moveCard(request):
+def move_card(request):
+    print("22")
     data_from_request = json.loads(request.data)
     cards = data_handler.get_all_cards()
     set_new_card_order(cards, data_from_request["order"])

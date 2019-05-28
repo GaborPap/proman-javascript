@@ -55,7 +55,7 @@ def add_new_board():
 @app.route('/dragdrop', methods=['POST'])
 @util.json_response
 def dragdrop():
-    return util.moveCard(request)
+    return util.move_card(request)
 
 def main():
     app.run(debug=True)
