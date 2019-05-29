@@ -58,6 +58,21 @@ def get_usr_id(username, users):
             return user["id"]
 
 
+def add_new_card(request):
+    cards = data_handler.get_cards()
+    new_card_data = json.loads(request.data)
+    new_card = {
+        'id': get_max_id(new_card_data) + 1,
+        'board_id': new_card_data['board_id'],
+        'title': new_card_data['title'],
+        'status_id': new_card_data['status_id'],
+        'order': new_card_data['order'],
+    }
+    cards.append(new_card)
+    data_handler.write_cards(cards)
+    return new_card
+
+
 def add_new_board(request):
     boards = data_handler.get_boards()
     new_board_data = json.loads(request.data)

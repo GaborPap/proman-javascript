@@ -58,6 +58,12 @@ def delete_board():
     return util.delete_board(request)
 
 
+@app.route('/add-card', methods=['GET', 'POST'])
+@util.json_response
+def add_card():
+    return util.add_new_card(request)
+
+
 def main():
     app.run(debug=True)
 

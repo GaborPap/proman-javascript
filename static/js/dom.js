@@ -24,6 +24,8 @@ export let dom = {
         document.querySelector('#login').addEventListener('click', dom.login);
         document.querySelector('#register').addEventListener('click', dom.register);
         dom.showLoggedIn();
+
+
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
@@ -166,6 +168,7 @@ export let dom = {
         section.appendChild(clone);
         section.appendChild(dom.getColumns(board.id));
         dom.addEventToDeleteBtn(section, board.id);
+        dom.addEventNewCard(section, board.id);
         return section;
     },
     getColumns: function (boardId) {
@@ -205,6 +208,20 @@ export let dom = {
             document.querySelector(`#board${response.id}`).remove();
         });
 
+    },
+    addEventNewCard: function (board, boardId){
+        let btn = board.querySelector('.card-add');
+        btn.setAttribute('data-board-id', boardId);
+        btn.addEventListener('click', dom.newCard);
+    },
+    newCard: function(event){
+        let button = event.currentTarget;
+        let boardId = button.dataset.boardId;
+        let newCard = {id: 0, board_id: boardId, title: 'New Card', status_id: 0, order: 0};
+        // dataHandler._api_post('/add-card', newCard, dom.addCard)
+    },
+    addCard: function(card){
+        dom.createCard(card)
     }
 };
 
