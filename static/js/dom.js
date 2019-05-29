@@ -216,25 +216,27 @@ export let dom = {
 
         drag: function () {
 
+
+
             dragula([].slice.call(document.querySelectorAll(".board-column-content")))
                 .on('drop', function (el) {
 
-                    let boardid = dom.getNumFromString(el.closest('section').id);
-                    let cardid = el.dataset.cardid;
-                    let status = dom.getStatus(el.closest('.board-column').className);
-                    let cardOrder = dom.getOrderList(el.closest('.board-column-content').children);
+                let boardid = dom.getNumFromString(el.closest('section').id);
+                let cardid = el.dataset.cardid;
+                let status = dom.getStatus(el.closest('.board-column').className);
+                let cardOrder = dom.getOrderList(el.closest('.board-column-content').children);
 
-                    let data = {
-                        'boardid': boardid,
-                        'cardid': cardid,
-                        'status': status,
-                        'order': cardOrder
-                    };
+                let data = {
+                    'boardid': boardid,
+                    'cardid': cardid,
+                    'status': status,
+                    'order': cardOrder
+                };
 
-                    dataHandler.moveCard('/dragdrop', data, function () {
+                dataHandler.moveCard('/dragdrop', data, function () {
 
-                    })
                 })
+            })
         }
     }
 ;
