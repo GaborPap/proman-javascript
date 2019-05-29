@@ -63,6 +63,12 @@ def dragdrop():
 def delete_board():
     return util.delete_board(request)
 
+
+@app.route('/delete-card', methods=['GET', 'POST'])
+@util.json_response
+def delete_card():
+    return util.delete_card(request)
+
   
 def main():
     app.run(debug=True)
