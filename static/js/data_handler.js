@@ -84,6 +84,9 @@ export let dataHandler = {
             callback(response);
         });
     },
+    moveCard: function(url, data, callback){
+        this._api_post(url, data, callback);
+    },
     deleteBoard: function (boardId, callback) {
         let board = {
             id: boardId
@@ -92,6 +95,6 @@ export let dataHandler = {
             this._data = response;
             callback(response);
         })
-    }
+    },
 };
 
