@@ -16,6 +16,7 @@ def json_response(func):
     def decorated_function(*args, **kwargs):
         return jsonify(func(*args, **kwargs))
 
+
     return decorated_function
 
 
