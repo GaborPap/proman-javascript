@@ -84,9 +84,17 @@ export let dataHandler = {
             callback(response);
         });
     },
-
     moveCard: function(url, data, callback){
         this._api_post(url, data, callback);
-    }
+    },
+    deleteBoard: function (boardId, callback) {
+        let board = {
+            id: boardId
+        };
+        this._api_post('/delete-board', board, (response) => {
+            this._data = response;
+            callback(response);
+        })
+    },
 };
 

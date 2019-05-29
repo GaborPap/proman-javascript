@@ -106,7 +106,7 @@ def user_register(request):
         return dic
     return {"success": False, "type": "Register"}
 
-
+  
 def get_status_id_by_name(status):
     statuses = data_handler.get_statuses()
     return [item["id"] for item in statuses if item["title"] == status][0]
@@ -128,7 +128,6 @@ def set_new_card_order(cards, order_dict):
 
 
 def move_card(request):
-    print("22")
     data_from_request = json.loads(request.data)
     cards = data_handler.get_all_cards()
     set_new_card_order(cards, data_from_request["order"])
@@ -137,3 +136,28 @@ def move_card(request):
     data_handler.write_cards(cards)
 
     return {"success": True}
+
+  
+def remove_board_by_id(boards, board_id):
+    for board in boards:
+        if board['id'] == board_id:
+            boards.remove(board)
+            return boards
+
+
+def delete_cards_by_board_id(board_id):
+    cards = data_handler.get_all_cards()
+    for card in cards.copy():
+        if card['board_id'] == board_id:
+            cards.remove(card)
+    data_handler.write_cards(cards)
+
+
+def delete_board(request):
+    boards = data_handler.get_boards()
+    request_data = json.loads(request.data)
+    board_id = request_data['id']
+    delete_cards_by_board_id(board_id)
+    boards = remove_board_by_id(boards, board_id)
+    data_handler.write_boards(boards)
+    return request_data
