@@ -2,19 +2,19 @@
 import {dataHandler} from "./data_handler.js";
 
 export let dom = {
-        _appendToElement: function (elementToExtend, textToAppend, prepend = false) {
-            // function to append new DOM elements (represented by a string) to an existing DOM element
-            let fakeDiv = document.createElement('div');
-            fakeDiv.innerHTML = textToAppend.trim();
+    _appendToElement: function (elementToExtend, textToAppend, prepend = false) {
+        // function to append new DOM elements (represented by a string) to an existing DOM element
+        let fakeDiv = document.createElement('div');
+        fakeDiv.innerHTML = textToAppend.trim();
 
-            for (let childNode of fakeDiv.childNodes) {
-                if (prepend) {
-                    elementToExtend.prependChild(childNode);
-                } else {
-                    elementToExtend.appendChild(childNode);
-                }
+        for (let childNode of fakeDiv.childNodes) {
+            if (prepend) {
+                elementToExtend.prependChild(childNode);
+            } else {
+                elementToExtend.appendChild(childNode);
             }
-            return elementToExtend.lastChild;
+        }
+        return elementToExtend.lastChild;
     },
     init: function () {
         // This function should run once, when the page is loaded.
@@ -45,6 +45,7 @@ export let dom = {
                 dom.loadCards(board.id);
             }
         }
+        dom.drag();
     },
     loadCards: function (boardId) {
         dataHandler.getCardsByBoardId(boardId, function (cards) {
@@ -69,48 +70,7 @@ export let dom = {
             $('.board-toggle').click(function () {
                 $('#box' + $(this).attr('target')).slideToggle(400);
             });
-     },
-    showBoards: function (boards) {
-        // shows boards appending them to #boards div
-        // it adds necessary event listeners also
-        const boardContainer = document.querySelector('.board-container');
-        boardContainer.innerHTML = '';
-
-        let userid = dom.getUserIdFromSession();
-
-        for (let board of boards) {
-            if ((board['userid'] === '0' && !board['userid']) || board['userid'] === userid) {
-                let boardElement = dom.createBoard(board);
-                boardContainer.appendChild(boardElement);
-                dom.loadCards(board.id);
-            }
-        }
-        dom.drag();
-    },
-    loadCards: function (boardId) {
-        dataHandler.getCardsByBoardId(boardId, function (cards) {
-            dom.showCards(boardId, cards)
         })
-    },
-    showCards: function (boardId, cards) {
-        // shows the cards of a board
-        // it adds necessary event listeners also
-        const board = document.querySelector(`#board${boardId}`);
-        const columns = board.querySelector('.board-columns');
-
-        for (let card of cards) {
-            let cardElement = dom.createCard(card);
-            let column = columns.querySelector(`.${card.status_id}`);
-            column.querySelector('.board-column-content').appendChild(cardElement);
-        }
-        board.appendChild(columns);
-    },
-    slide: function () {
-        $(document).ready(function () {
-            $('.board-toggle').click(function () {
-                $('#box' + $(this).attr('target')).slideToggle(400);
-            });
-        });
     },
     // here comes more features
     openModal: function (title, button_text, callback) {
@@ -190,6 +150,7 @@ export let dom = {
         clone.querySelector('.board-title').innerHTML = board.title;
         section.appendChild(clone);
         section.appendChild(dom.getColumns(board.id));
+        dom.addEventToDeleteBtn(section, board.id);
         return section;
     },
     getColumns: function (boardId) {
@@ -241,22 +202,22 @@ export let dom = {
         dragula([].slice.call(document.querySelectorAll(".board-column-content")))
             .on('drop', function (el) {
 
-            let boardid = dom.getNumFromString(el.closest('section').id);
-            let cardid = el.dataset.cardid;
-            let status = dom.getStatus(el.closest('.board-column').className);
-            let cardOrder = dom.getOrderList(el.closest('.board-column-content').children);
+                let boardid = dom.getNumFromString(el.closest('section').id);
+                let cardid = el.dataset.cardid;
+                let status = dom.getStatus(el.closest('.board-column').className);
+                let cardOrder = dom.getOrderList(el.closest('.board-column-content').children);
 
-            let data = {
-                'boardid': boardid,
-                'cardid': cardid,
-                'status': status,
-                'order': cardOrder
-            };
+                let data = {
+                    'boardid': boardid,
+                    'cardid': cardid,
+                    'status': status,
+                    'order': cardOrder
+                };
 
-            dataHandler.moveCard('/dragdrop', data, function () {
+                dataHandler.moveCard('/dragdrop', data, function () {
 
+                })
             })
-        })
     },
     addEventToDeleteBtn: function (board, boardId) {
         let button = board.querySelector('.board-delete');
@@ -273,7 +234,8 @@ export let dom = {
     sortCards: function (cards) {
         return cards.sort((a, b) => (Number(a.order) > Number(b.order)) ? 1 : -1)
     },
- };
+};
+
 
 
 
