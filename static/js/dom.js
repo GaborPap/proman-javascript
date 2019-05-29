@@ -183,7 +183,7 @@ export let dom = {
             let boarContainer = document.querySelector('.board-container');
             let newBoard = dom.createBoard(response);
             boarContainer.appendChild(newBoard);
-            dom.testDrag(newBoard);
+            dom.dragNewBoard(newBoard);
             //dom.drag();
         })
 
@@ -206,17 +206,18 @@ export let dom = {
         return orderList;
     },
 
-    testDrag: function (board) {
+    dragNewBoard: function (board) {
 
-        for (let i of board.querySelectorAll(".board-column-content"))
-            dom.drake.containers.push(i);
+        for (let ndex of board.querySelectorAll(".board-column-content"))
+            dom.drake.containers.push(ndex);
 
     },
     drag: function () {
 
-        let x = document.querySelectorAll(".board-column-content");
-        for (let i = 0; i<x.length; i++)
-            dom.drake.containers.push(x[i]);
+        let cards = document.querySelectorAll(".board-column-content");
+        for (let index = 0; index<cards.length; index++)
+            dom.drake.containers.push(cards[index]);
+
         dom.drake.on('drop', function (el) {
             let boardid = dom.getNumFromString(el.closest('section').id);
             let cardid = el.dataset.cardid;
