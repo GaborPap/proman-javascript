@@ -1,7 +1,10 @@
 // It uses data_handler.js to visualize elements
 import {dataHandler} from "./data_handler.js";
 
+
 export let dom = {
+    drake : window.dragula(),
+
     _appendToElement: function (elementToExtend, textToAppend, prepend = false) {
         // function to append new DOM elements (represented by a string) to an existing DOM element
         let fakeDiv = document.createElement('div');
@@ -17,12 +20,15 @@ export let dom = {
         return elementToExtend.lastChild;
     },
     init: function () {
+
         // This function should run once, when the page is loaded.
         document.querySelector('#new_board button').addEventListener('click', dom.addNewBoard);
         document.querySelector('#logout').addEventListener('click', dom.logout);
         document.querySelector('#login').addEventListener('click', dom.login);
         document.querySelector('#register').addEventListener('click', dom.register);
         dom.showLoggedIn();
+
+
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
@@ -151,6 +157,7 @@ export let dom = {
         section.appendChild(clone);
         section.appendChild(dom.getColumns(board.id));
         dom.addEventToDeleteBtn(section, board.id);
+
         return section;
     },
     getColumns: function (boardId) {
@@ -176,7 +183,8 @@ export let dom = {
             let boarContainer = document.querySelector('.board-container');
             let newBoard = dom.createBoard(response);
             boarContainer.appendChild(newBoard);
-            dom.drag();
+            dom.testDrag(newBoard);
+            //dom.drag();
         })
 
     },
@@ -197,27 +205,35 @@ export let dom = {
         }
         return orderList;
     },
+
+    testDrag: function (board) {
+
+        for (let i of board.querySelectorAll(".board-column-content"))
+            dom.drake.containers.push(i);
+
+    },
     drag: function () {
 
-        dragula([].slice.call(document.querySelectorAll(".board-column-content")))
-            .on('drop', function (el) {
+        let x = document.querySelectorAll(".board-column-content");
+        for (let i = 0; i<x.length; i++)
+            dom.drake.containers.push(x[i]);
+        dom.drake.on('drop', function (el) {
+            let boardid = dom.getNumFromString(el.closest('section').id);
+            let cardid = el.dataset.cardid;
+            let status = dom.getStatus(el.closest('.board-column').className);
+            let cardOrder = dom.getOrderList(el.closest('.board-column-content').children);
 
-                let boardid = dom.getNumFromString(el.closest('section').id);
-                let cardid = el.dataset.cardid;
-                let status = dom.getStatus(el.closest('.board-column').className);
-                let cardOrder = dom.getOrderList(el.closest('.board-column-content').children);
+            let data = {
+                'boardid': boardid,
+                'cardid': cardid,
+                'status': status,
+                'order': cardOrder
+            };
 
-                let data = {
-                    'boardid': boardid,
-                    'cardid': cardid,
-                    'status': status,
-                    'order': cardOrder
-                };
+            dataHandler.moveCard('/dragdrop', data, function () {
 
-                dataHandler.moveCard('/dragdrop', data, function () {
-
-                })
             })
+        })
     },
     addEventToDeleteBtn: function (board, boardId) {
         let button = board.querySelector('.board-delete');
