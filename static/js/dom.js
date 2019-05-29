@@ -59,7 +59,7 @@ export let dom = {
         // it adds necessary event listeners also
         const board = document.querySelector(`#board${boardId}`);
         const columns = board.querySelector('.board-columns');
-
+        cards = dom.sortCards(cards);
         for (let card of cards) {
             let cardElement = dom.createCard(card);
             let column = columns.querySelector(`.${card.status_id}`);
@@ -204,7 +204,9 @@ export let dom = {
         dataHandler.deleteBoard(boardId, function (response) {
             document.querySelector(`#board${response.id}`).remove();
         });
-
+    },
+    sortCards: function (cards) {
+        return cards.sort((a, b) => (Number(a.order) > Number(b.order)) ? 1 : -1)
     }
 };
 
