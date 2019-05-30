@@ -16,7 +16,6 @@ def json_response(func):
     def decorated_function(*args, **kwargs):
         return jsonify(func(*args, **kwargs))
 
-
     return decorated_function
 
 
@@ -130,7 +129,7 @@ def user_register(request):
         return dic
     return {"success": False, "type": "Register"}
 
-  
+
 def get_status_id_by_name(status):
     statuses = data_handler.get_statuses()
     return [item["id"] for item in statuses if item["title"] == status][0]
@@ -145,7 +144,6 @@ def update_card_data(cards, data_from_request, status_id):
 
 
 def set_new_card_order(cards, order_dict):
-
     for index in range(len(cards)):
         if cards[index]["id"] in order_dict:
             cards[index]["order"] = order_dict[cards[index]["id"]]
@@ -161,7 +159,7 @@ def move_card(request):
 
     return {"success": True}
 
-  
+
 def remove_board_by_id(boards, board_id):
     for board in boards:
         if board['id'] == board_id:
@@ -195,3 +193,14 @@ def delete_card(request):
             cards.remove(card)
             data_handler.write_cards(cards)
             return {'success': True}
+
+
+def rename_card(request):
+    updated_card = json.loads(request.data)
+    cards = data_handler.get_all_cards()
+    for card in cards:
+        if card['id'] == updated_card['cardId']:
+            card['title'] = updated_card['cardTitle']
+    data_handler.write_cards(cards)
+    return updated_card
+
