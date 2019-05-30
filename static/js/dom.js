@@ -14,7 +14,6 @@ export let dom = {
                 elementToExtend.appendChild(childNode);
             }
         }
-
         return elementToExtend.lastChild;
     },
     init: function () {
@@ -24,8 +23,6 @@ export let dom = {
         document.querySelector('#login').addEventListener('click', dom.login);
         document.querySelector('#register').addEventListener('click', dom.register);
         dom.showLoggedIn();
-
-
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
@@ -33,7 +30,6 @@ export let dom = {
             dom.showBoards(boards);
         });
     },
-
     showBoards: function (boards) {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
@@ -49,8 +45,8 @@ export let dom = {
                 dom.loadCards(board.id);
             }
         }
+        dom.drag();
     },
-
     loadCards: function (boardId) {
         dataHandler.getCardsByBoardId(boardId, function (cards) {
             dom.showCards(boardId, cards)
@@ -61,7 +57,7 @@ export let dom = {
         // it adds necessary event listeners also
         const board = document.querySelector(`#board${boardId}`);
         const columns = board.querySelector('.board-columns');
-
+        cards = dom.sortCards(cards);
         for (let card of cards) {
             let cardElement = dom.createCard(card);
             let column = columns.querySelector(`.${card.status_id}`);
@@ -74,10 +70,9 @@ export let dom = {
             $('.board-toggle').click(function () {
                 $('#box' + $(this).attr('target')).slideToggle(400);
             });
-        });
+        })
     },
     // here comes more features
-
     openModal: function (title, button_text, callback) {
         let form_values = {};
 
@@ -91,10 +86,7 @@ export let dom = {
             });
             callback(form_values)
         })
-
-
     },
-
     setLoginData: function (results) {
         if (results["success"] === true) {
             sessionStorage.setItem('username', results["username"]);
@@ -105,8 +97,6 @@ export let dom = {
 
             alert(`${results["type"]} failed`);
     },
-
-
     login: function () {
 
         dom.openModal('Login', 'Login', function (form_values) {
@@ -115,7 +105,6 @@ export let dom = {
             });
         });
     },
-
     register: function () {
         dom.openModal('Register', 'Register', function (form_values) {
             dataHandler.handleUserAuthentication('/register', form_values, function (results) {
@@ -123,8 +112,6 @@ export let dom = {
             });
         });
     },
-
-
     showLoggedIn: function () {
         let username = sessionStorage.getItem("username");
         let register = document.querySelector("#register");
@@ -143,17 +130,13 @@ export let dom = {
             login.style.display = 'block';
             logout.style.display = 'none';
         }
-    }
-    ,
-
+    },
     logout: function () {
         if (sessionStorage.getItem("username"))
             sessionStorage.removeItem("username");
         sessionStorage.removeItem("userid");
         location.reload();
-    }
-    ,
-
+    },
     getUserIdFromSession: function () {
         return sessionStorage.getItem("userid") ? sessionStorage.getItem("userid") : '0'
     },
@@ -194,7 +177,47 @@ export let dom = {
             let boarContainer = document.querySelector('.board-container');
             let newBoard = dom.createBoard(response);
             boarContainer.appendChild(newBoard);
+            dom.drag();
         })
+    },
+    getNumFromString: function (str) {
+        return str.replace(/\D/g, "");
+    },
+
+    getStatus: function (str) {
+        return str.substring(str.lastIndexOf(" ") + 1, str.length)
+    },
+
+    getOrderList: function (childrenList) {
+        let orderList = {};
+        let index = 0;
+        for (let item of childrenList) {
+            orderList[item.dataset["cardid"]] = index;
+            index += 1;
+        }
+        return orderList;
+    },
+    drag: function () {
+
+        dragula([].slice.call(document.querySelectorAll(".board-column-content")))
+            .on('drop', function (el) {
+
+                let boardid = dom.getNumFromString(el.closest('section').id);
+                let cardid = el.dataset.cardid;
+                let status = dom.getStatus(el.closest('.board-column').className);
+                let cardOrder = dom.getOrderList(el.closest('.board-column-content').children);
+
+                let data = {
+                    'boardid': boardid,
+                    'cardid': cardid,
+                    'status': status,
+                    'order': cardOrder
+                };
+
+                dataHandler.moveCard('/dragdrop', data, function () {
+
+                })
+            })
     },
     addEventToDeleteBtn: function (board, boardId) {
         let button = board.querySelector('.board-delete');
@@ -224,5 +247,11 @@ export let dom = {
             newCardContainer.appendChild(newCard)
         })
     },
+    sortCards: function (cards) {
+        return cards.sort((a, b) => (Number(a.order) > Number(b.order)) ? 1 : -1)
+    },
 };
+
+
+
 

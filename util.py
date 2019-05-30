@@ -16,6 +16,7 @@ def json_response(func):
     def decorated_function(*args, **kwargs):
         return jsonify(func(*args, **kwargs))
 
+
     return decorated_function
 
 
@@ -121,7 +122,38 @@ def user_register(request):
         return dic
     return {"success": False, "type": "Register"}
 
+  
+def get_status_id_by_name(status):
+    statuses = data_handler.get_statuses()
+    return [item["id"] for item in statuses if item["title"] == status][0]
 
+
+def update_card_data(cards, data_from_request, status_id):
+    for index in range(len(cards)):
+        if cards[index]['id'] == data_from_request['cardid']:
+            cards[index]['status_id'] = status_id
+            cards[index]['board_id'] = data_from_request['boardid']
+            return cards
+
+
+def set_new_card_order(cards, order_dict):
+
+    for index in range(len(cards)):
+        if cards[index]["id"] in order_dict:
+            cards[index]["order"] = order_dict[cards[index]["id"]]
+
+
+def move_card(request):
+    data_from_request = json.loads(request.data)
+    cards = data_handler.get_all_cards()
+    set_new_card_order(cards, data_from_request["order"])
+    status_id = get_status_id_by_name(data_from_request["status"])
+    update_card_data(cards, data_from_request, status_id)
+    data_handler.write_cards(cards)
+
+    return {"success": True}
+
+  
 def remove_board_by_id(boards, board_id):
     for board in boards:
         if board['id'] == board_id:
@@ -130,7 +162,7 @@ def remove_board_by_id(boards, board_id):
 
 
 def delete_cards_by_board_id(board_id):
-    cards = data_handler.get_cards()
+    cards = data_handler.get_all_cards()
     for card in cards.copy():
         if card['board_id'] == board_id:
             cards.remove(card)
@@ -145,6 +177,3 @@ def delete_board(request):
     boards = remove_board_by_id(boards, board_id)
     data_handler.write_boards(boards)
     return request_data
-
-
-
