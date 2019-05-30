@@ -2,6 +2,8 @@
 import {dataHandler} from "./data_handler.js";
 
 export let dom = {
+    drake : window.dragula(),
+
     _appendToElement: function (elementToExtend, textToAppend, prepend = false) {
         // function to append new DOM elements (represented by a string) to an existing DOM element
         let fakeDiv = document.createElement('div');
@@ -180,7 +182,7 @@ export let dom = {
             let boarContainer = document.querySelector('.board-container');
             let newBoard = dom.createBoard(response);
             boarContainer.appendChild(newBoard);
-            dom.drag();
+            dom.dragNewBoard(newBoard);
         })
     },
     getNumFromString: function (str) {
@@ -198,27 +200,35 @@ export let dom = {
         }
         return orderList;
     },
+    dragNewBoard: function (board) {
+
+        for (let ndex of board.querySelectorAll(".board-column-content"))
+            dom.drake.containers.push(ndex);
+
+    },
     drag: function () {
 
-        dragula([].slice.call(document.querySelectorAll(".board-column-content")))
-            .on('drop', function (el) {
+        let cards = document.querySelectorAll(".board-column-content");
+        for (let index = 0; index<cards.length; index++)
+            dom.drake.containers.push(cards[index]);
 
-                let boardid = dom.getNumFromString(el.closest('section').id);
-                let cardid = el.dataset.cardid;
-                let status = dom.getStatus(el.closest('.board-column').className);
-                let cardOrder = dom.getOrderList(el.closest('.board-column-content').children);
+        dom.drake.on('drop', function (el) {
+            let boardid = dom.getNumFromString(el.closest('section').id);
+            let cardid = el.dataset.cardid;
+            let status = dom.getStatus(el.closest('.board-column').className);
+            let cardOrder = dom.getOrderList(el.closest('.board-column-content').children);
 
-                let data = {
-                    'boardid': boardid,
-                    'cardid': cardid,
-                    'status': status,
-                    'order': cardOrder
-                };
+            let data = {
+                'boardid': boardid,
+                'cardid': cardid,
+                'status': status,
+                'order': cardOrder
+            };
 
-                dataHandler.moveCard('/dragdrop', data, function () {
+            dataHandler.moveCard('/dragdrop', data, function () {
 
-                })
             })
+        })
     },
     addEventToBoardDeleteBtn: function (board, boardId) {
         let button = board.querySelector('.board-delete');
