@@ -63,8 +63,16 @@ export let dataHandler = {
             callback(response)
         });
     },
-    getCard: function (cardId, callback) {
+    getCard: function (cardId, cardTitle, callback) {
         // the card is retrieved and then the callback function is called with the card
+        let data = {
+            'cardId': cardId,
+            'cardTitle': cardTitle
+        };
+        this._api_post('/rename-card', data, (response) => {
+            this._data = response;
+            callback(response);
+        })
     },
     createNewBoard: function (newBoard, callback) {
         // creates new board, saves it and calls the callback function with its data

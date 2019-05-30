@@ -282,14 +282,24 @@ export let dom = {
         input.setAttribute('type', 'text');
         input.setAttribute('value', `${event.target.innerHTML}`);
         input.classList.add('rename-card');
-        event.target.parentNode.insertBefore(input, event.target);
-        input.appendChild(event.target);
+        // event.target.insertBefore(input, event.target);
+        // input.appendChild(event.target);
         // let cardId = input.previousElementSibling.dataset.cardId;
-        input.addEventListener('keyup', dom.postCardTitle())
+        input.addEventListener('keyup', dom.postCardTitle)
     },
-    postCardTitle: function () {
-        if (event.key === 'Enter'){
-            console.log('ads')
+    postCardTitle: function (e) {
+        console.log(event.target);
+        let card = event.target.parentNode;
+        console.log(card);
+        if (e.key === 'Enter'){
+            let newName = this.value;
+            let cardId = this.previousElementSibling.dataset.cardId;
+            dataHandler.getCard(cardId, newName, function(){
+
+                card.innerHTML = newName;
+
+            })
+
         }
     }
 };

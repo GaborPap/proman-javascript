@@ -70,6 +70,12 @@ def add_card():
     return util.add_new_card(request)
 
 
+@app.route('/rename-card', methods=['GET', 'POST'])
+@util.json_response
+def rename_card():
+    return util.rename_card(request)
+
+
 @app.route('/delete-card', methods=['GET', 'POST'])
 @util.json_response
 def delete_card():
