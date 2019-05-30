@@ -57,11 +57,17 @@ def add_new_board():
 def dragdrop():
     return util.move_card(request)
 
-  
+
 @app.route('/delete-board', methods=['GET', 'POST'])
 @util.json_response
 def delete_board():
     return util.delete_board(request)
+
+
+@app.route('/add-card', methods=['GET', 'POST'])
+@util.json_response
+def add_card():
+    return util.add_new_card(request)
 
 
 @app.route('/delete-card', methods=['GET', 'POST'])
@@ -69,7 +75,7 @@ def delete_board():
 def delete_card():
     return util.delete_card(request)
 
-  
+
 def main():
     app.run(debug=True)
 

@@ -153,6 +153,7 @@ export let dom = {
         section.appendChild(dom.getColumns(board.id));
         dom.addEventToBoardDeleteBtn(section, board.id);
         dom.slide(section);
+        dom.addEventNewCard(section, board.id);
         return section;
     },
     getColumns: function (boardId) {
@@ -181,16 +182,13 @@ export let dom = {
             boarContainer.appendChild(newBoard);
             dom.drag();
         })
-
     },
     getNumFromString: function (str) {
         return str.replace(/\D/g, "");
     },
-
     getStatus: function (str) {
         return str.substring(str.lastIndexOf(" ") + 1, str.length)
     },
-
     getOrderList: function (childrenList) {
         let orderList = {};
         let index = 0;
@@ -233,6 +231,23 @@ export let dom = {
         dataHandler.deleteBoard(boardId, function (response) {
             document.querySelector(`#board${response.id}`).remove();
         });
+    },
+    addEventNewCard: function (board, boardId){
+        let btn = board.querySelector('.card-add');
+        btn.setAttribute('data-board-id', boardId);
+        btn.addEventListener('click', dom.addNewCard);
+    },
+    addNewCard: function(event){
+        let button = event.currentTarget;
+        let boardId = button.dataset.boardId;
+        let newCard = {board_id: boardId, title: 'New Card', status_id: 0, order: 0};
+        dataHandler.createNewCard(newCard, function (response) {
+            let board = document.querySelector(`#board${boardId}`);
+            let newColumn = board.querySelector('.new');
+            let columnContainer = newColumn.querySelector('.board-column-content');
+            let newCard = dom.createCard(response);
+            columnContainer.insertBefore(newCard, columnContainer.firstElementChild)
+        })
     },
     sortCards: function (cards) {
         return cards.sort((a, b) => (Number(a.order) > Number(b.order)) ? 1 : -1)

@@ -16,6 +16,7 @@ def json_response(func):
     def decorated_function(*args, **kwargs):
         return jsonify(func(*args, **kwargs))
 
+
     return decorated_function
 
 
@@ -56,6 +57,29 @@ def get_usr_id(username, users):
     for user in users:
         if user["username"] == username:
             return user["id"]
+
+
+def add_new_card(request):
+    cards = data_handler.get_all_cards()
+    new_card_data = json.loads(request.data)
+    new_card = {
+        'id': get_max_id(cards) + 1,
+        'board_id': new_card_data['board_id'],
+        'title': new_card_data['title'],
+        'status_id': new_card_data['status_id'],
+        'order': new_card_data['order'],
+    }
+    cards = change_card_order(cards, new_card_data['board_id'])
+    cards.append(new_card)
+    data_handler.write_cards(cards)
+    return new_card
+
+
+def change_card_order(cards, board_id):
+    for card in cards:
+        if card['board_id'] == board_id and card['status_id'] == '0':
+            card['order'] = int(card['order']) + 1
+    return cards
 
 
 def add_new_board(request):
