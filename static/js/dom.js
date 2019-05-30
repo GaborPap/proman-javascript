@@ -212,16 +212,17 @@ export let dom = {
     addEventNewCard: function (board, boardId){
         let btn = board.querySelector('.card-add');
         btn.setAttribute('data-board-id', boardId);
-        btn.addEventListener('click', dom.newCard);
+        btn.addEventListener('click', dom.addNewCard);
     },
-    newCard: function(event){
+    addNewCard: function(event){
         let button = event.currentTarget;
         let boardId = button.dataset.boardId;
-        let newCard = {id: 0, board_id: boardId, title: 'New Card', status_id: 0, order: 0};
-        // dataHandler._api_post('/add-card', newCard, dom.addCard)
+        let newCard = {board_id: boardId, title: 'New Card', status_id: 0, order: 0};
+        dataHandler.createNewCard(newCard, function (response) {
+            let newCardContainer = document.querySelector('.board-column-content');
+            let newCard = dom.createCard(response);
+            newCardContainer.appendChild(newCard)
+        })
     },
-    addCard: function(card){
-        dom.createCard(card)
-    }
 };
 
