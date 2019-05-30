@@ -171,6 +171,9 @@ export let dom = {
         clone_card.querySelector('.card').setAttribute('data-order', card.order);
         clone_card.querySelector('.card').setAttribute('data-cardId', card.id);
         dom.addEventToCardRemoveBtn(clone_card, card.id);
+        let cardTitle = clone_card.querySelector(".card-title");
+        // cardTitle.setAttribute('data-cardid', card.id);
+        cardTitle.addEventListener('click', dom.cardRenameEvent);
         return clone_card;
     },
     addNewBoard: function () {
@@ -274,6 +277,21 @@ export let dom = {
             btn.parentNode.remove();
         });
     },
+    cardRenameEvent: function () {
+        let input = document.createElement('input');
+        input.setAttribute('type', 'text');
+        input.setAttribute('value', `${event.target.innerHTML}`);
+        input.classList.add('rename-card');
+        event.target.parentNode.insertBefore(input, event.target);
+        input.appendChild(event.target);
+        // let cardId = input.previousElementSibling.dataset.cardId;
+        input.addEventListener('keyup', dom.postCardTitle())
+    },
+    postCardTitle: function () {
+        if (event.key === 'Enter'){
+            console.log('ads')
+        }
+    }
 };
 
 
