@@ -248,7 +248,7 @@ export let dom = {
         dataHandler.deleteCard(cardId, function () {
             btn.parentNode.remove();
         });
-    }
+    },
 };
 
 
