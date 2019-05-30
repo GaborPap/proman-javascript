@@ -2,7 +2,7 @@
 import {dataHandler} from "./data_handler.js";
 
 export let dom = {
-    drake : window.dragula(),
+    drake: window.dragula(),
 
     _appendToElement: function (elementToExtend, textToAppend, prepend = false) {
         // function to append new DOM elements (represented by a string) to an existing DOM element
@@ -212,7 +212,7 @@ export let dom = {
     drag: function () {
 
         let cards = document.querySelectorAll(".board-column-content");
-        for (let index = 0; index<cards.length; index++)
+        for (let index = 0; index < cards.length; index++)
             dom.drake.containers.push(cards[index]);
 
         dom.drake.on('drop', function (el) {
@@ -245,12 +245,12 @@ export let dom = {
             document.querySelector(`#board${response.id}`).remove();
         });
     },
-    addEventNewCard: function (board, boardId){
+    addEventNewCard: function (board, boardId) {
         let btn = board.querySelector('.card-add');
         btn.setAttribute('data-board-id', boardId);
         btn.addEventListener('click', dom.addNewCard);
     },
-    addNewCard: function(event){
+    addNewCard: function (event) {
         let button = event.currentTarget;
         let boardId = button.dataset.boardId;
         let newCard = {board_id: boardId, title: 'New Card', status_id: 0, order: 0};
@@ -286,14 +286,17 @@ export let dom = {
         cardTitleDiv.innerHTML = '';
         input.addEventListener('keyup', dom.postCardTitle);
         cardTitleDiv.appendChild(input);
+        let inputValueLength = cardTitleDiv.innerHTML.length;
+        input.focus();
+        input.setSelectionRange(inputValueLength, inputValueLength);
     },
     postCardTitle: function (e) {
         let input = event.target;
         let cardTitle = input.parentNode;
-        if (e.key === 'Enter'){
+        if (e.key === 'Enter') {
             let newName = this.value;
             let cardId = cardTitle.parentNode.dataset.cardid;
-            dataHandler.getCard(cardId, newName, function(){
+            dataHandler.getCard(cardId, newName, function () {
 
                 cardTitle.innerHTML = newName;
 
