@@ -44,8 +44,16 @@ export let dataHandler = {
             callback(response);
         });
     },
-    getBoard: function (boardId, callback) {
+    getBoard: function (boardId,boardTitle, callback) {
         // the board is retrieved and then the callback function is called with the board
+        let data = {
+            'boardId': boardId,
+            'boardTitle': boardTitle
+        };
+        this._api_post('/rename-board',data,(response) => {
+            this._data = response;
+            callback(response);
+        })
     },
     getStatuses: function (callback) {
         // the statuses are retrieved and then the callback function is called with the statuses

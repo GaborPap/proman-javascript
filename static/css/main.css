@@ -97,6 +97,7 @@ section.board{
     border-radius: var(--border-radius);
     margin: 4px 0;
     padding: 4px;
+    max-width: 200px;
 }
 
 .board-column:nth-of-type(1) .card{
@@ -183,6 +184,13 @@ input:focus {
     background: var(--status-4);
     color: white;
     width: 150px;
+    border:2px solid grey;
+    border-radius: 5px;
+    padding: 4px;
+}
+
+.rename-board {
+    width: 180px;
     border:2px solid grey;
     border-radius: 5px;
     padding: 4px;

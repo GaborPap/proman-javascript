@@ -76,6 +76,12 @@ def rename_card():
     return util.rename_card(request)
 
 
+@app.route('/rename-board', methods=['GET', 'POST'])
+@util.json_response
+def rename_board():
+    return util.rename_board(request)
+
+
 @app.route('/delete-card', methods=['GET', 'POST'])
 @util.json_response
 def delete_card():
