@@ -242,9 +242,11 @@ export let dom = {
         let boardId = button.dataset.boardId;
         let newCard = {board_id: boardId, title: 'New Card', status_id: 0, order: 0};
         dataHandler.createNewCard(newCard, function (response) {
-            let newCardContainer = document.querySelector('.board-column-content');
+            let board = document.querySelector(`#board${boardId}`);
+            let newColumn = board.querySelector('.new');
+            let columnContainer = newColumn.querySelector('.board-column-content');
             let newCard = dom.createCard(response);
-            newCardContainer.appendChild(newCard)
+            columnContainer.insertBefore(newCard, columnContainer.firstElementChild)
         })
     },
     sortCards: function (cards) {

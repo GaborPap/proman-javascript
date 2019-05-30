@@ -74,7 +74,6 @@ export let dataHandler = {
         });
     },
     createNewCard: function (cardTitle, callback) {
-        console.log(cardTitle);
         this._api_post('/add-card', cardTitle, (response) => {
             this._data = response;
             callback(response);
