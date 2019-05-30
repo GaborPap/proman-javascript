@@ -177,3 +177,13 @@ def delete_board(request):
     boards = remove_board_by_id(boards, board_id)
     data_handler.write_boards(boards)
     return request_data
+
+
+def delete_card(request):
+    cards = data_handler.get_all_cards()
+    card_id = json.loads(request.data)['id']
+    for card in cards:
+        if card['id'] == card_id:
+            cards.remove(card)
+            data_handler.write_cards(cards)
+            return {'success': True}

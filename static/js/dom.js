@@ -65,9 +65,10 @@ export let dom = {
         }
         board.appendChild(columns);
     },
-    slide: function () {
+    slide: function (board) {
+        let boardToggle = board.querySelector('.board-toggle');
         $(document).ready(function () {
-            $('.board-toggle').click(function () {
+            $(boardToggle).click(function () {
                 $('#box' + $(this).attr('target')).slideToggle(400);
             });
         })
@@ -150,7 +151,8 @@ export let dom = {
         clone.querySelector('.board-title').innerHTML = board.title;
         section.appendChild(clone);
         section.appendChild(dom.getColumns(board.id));
-        dom.addEventToDeleteBtn(section, board.id);
+        dom.addEventToBoardDeleteBtn(section, board.id);
+        dom.slide(section);
         dom.addEventNewCard(section, board.id);
         return section;
     },
@@ -166,6 +168,7 @@ export let dom = {
         clone_card.querySelector('.card-title').innerHTML = card.title;
         clone_card.querySelector('.card').setAttribute('data-order', card.order);
         clone_card.querySelector('.card').setAttribute('data-cardId', card.id);
+        dom.addEventToCardRemoveBtn(clone_card, card.id);
         return clone_card;
     },
     addNewBoard: function () {
@@ -183,11 +186,9 @@ export let dom = {
     getNumFromString: function (str) {
         return str.replace(/\D/g, "");
     },
-
     getStatus: function (str) {
         return str.substring(str.lastIndexOf(" ") + 1, str.length)
     },
-
     getOrderList: function (childrenList) {
         let orderList = {};
         let index = 0;
@@ -219,7 +220,7 @@ export let dom = {
                 })
             })
     },
-    addEventToDeleteBtn: function (board, boardId) {
+    addEventToBoardDeleteBtn: function (board, boardId) {
         let button = board.querySelector('.board-delete');
         button.setAttribute('data-board-id', boardId);
         button.addEventListener('click', dom.deleteBoard);
@@ -230,7 +231,6 @@ export let dom = {
         dataHandler.deleteBoard(boardId, function (response) {
             document.querySelector(`#board${response.id}`).remove();
         });
-
     },
     addEventNewCard: function (board, boardId){
         let btn = board.querySelector('.card-add');
@@ -249,6 +249,18 @@ export let dom = {
     },
     sortCards: function (cards) {
         return cards.sort((a, b) => (Number(a.order) > Number(b.order)) ? 1 : -1)
+    },
+    addEventToCardRemoveBtn: function (card, cardId) {
+        let btn = card.querySelector('.card-remove');
+        btn.setAttribute('data-card-id', cardId);
+        btn.addEventListener('click', dom.deleteCard);
+    },
+    deleteCard: function (event) {
+        let btn = event.currentTarget;
+        let cardId = btn.dataset.cardId;
+        dataHandler.deleteCard(cardId, function () {
+            btn.parentNode.remove();
+        });
     },
 };
 

@@ -101,5 +101,11 @@ export let dataHandler = {
             callback(response);
         })
     },
+    deleteCard: function (cardId, callback) {
+        let card = {
+            id: cardId
+        };
+        this._api_post('/delete-card', card, callback);
+    }
 };
 
