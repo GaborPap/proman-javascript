@@ -151,6 +151,8 @@ export let dom = {
         section.classList.add(`board`);
         clone.querySelector('.board-toggle').setAttribute('target', board.id);
         clone.querySelector('.board-title').innerHTML = board.title;
+        let boardTitle = clone.querySelector('.board-title');
+        boardTitle.addEventListener('click',dom.boardRenameEvent);
         section.appendChild(clone);
         section.appendChild(dom.getColumns(board.id));
         dom.addEventToBoardDeleteBtn(section, board.id);
@@ -276,6 +278,30 @@ export let dom = {
         dataHandler.deleteCard(cardId, function () {
             btn.parentNode.remove();
         });
+    },
+    boardRenameEvent: function(){
+        let boardTitleDiv = event.target;
+        let input = document.createElement('input');
+        input.setAttribute('type', 'text');
+        input.setAttribute('value', `${boardTitleDiv.innerHTML}`);
+        input.classList.add('rename-board');
+        boardTitleDiv.innerHTML = '';
+        input.addEventListener('keyup',dom.postBoardTitle);
+        boardTitleDiv.appendChild(input);
+        let inputValueLength = boardTitleDiv.innerHTML.length;
+        input.focus();
+        input.setSelectionRange(inputValueLength, inputValueLength);
+    },
+    postBoardTitle: function(e){
+      let input = event.target;
+      let boardTitle = input.parentNode;
+      if (e.key === 'Enter') {
+          let newName = this.value;
+          let boardId = boardTitle.parentNode.lastElementChild.dataset.boardId;
+          dataHandler.getBoard(boardId, newName, function () {
+              boardTitle.innerHTML = newName;
+          })
+      }
     },
     cardRenameEvent: function () {
         let cardTitleDiv = event.target;

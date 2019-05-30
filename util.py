@@ -204,3 +204,12 @@ def rename_card(request):
     data_handler.write_cards(cards)
     return updated_card
 
+
+def rename_board(request):
+    updated_board = json.loads(request.data)
+    boards = data_handler.get_boards()
+    for board in boards:
+        if board['id'] == updated_board['boardId']:
+            board['title'] = updated_board['boardTitle']
+    data_handler.write_boards(boards)
+    return updated_board
