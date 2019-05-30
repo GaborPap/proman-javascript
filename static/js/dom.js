@@ -285,11 +285,9 @@ export let dom = {
         input.classList.add('rename-card');
         cardTitleDiv.innerHTML = '';
         input.addEventListener('keyup', dom.postCardTitle);
-        // let cardId = input.previousElementSibling.dataset.cardId;
         cardTitleDiv.appendChild(input);
     },
     postCardTitle: function (e) {
-        console.log(event.target);
         let input = event.target;
         let cardTitle = input.parentNode;
         if (e.key === 'Enter'){
